@@ -31,7 +31,7 @@ let GameController = class GameController {
             update.color === 'green' ||
             update.color === 'yellow' ||
             update.color === 'magenta')) {
-            return 'Invalid Color!';
+            throw new routing_controllers_1.BadRequestError('Invalid Color!');
         }
         if (update.board) {
             const boardStringing = JSON.stringify(update.board);
@@ -48,7 +48,7 @@ let GameController = class GameController {
                 .reduce((a, b) => a.concat(b))
                 .length;
             if (moves > 1) {
-                return 'Invalid Move!';
+                throw new routing_controllers_1.BadRequestError('Invalid Move!');
             }
         }
         return entity_1.default.merge(game, update).save();

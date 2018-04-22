@@ -1,4 +1,4 @@
-import { JsonController, Get,Put,Body, Param,Post,HttpCode,NotFoundError } from 'routing-controllers'
+import { JsonController, Get,Put,Body, Param,Post,HttpCode,NotFoundError, BadRequestError } from 'routing-controllers'
 import Game from './entity'
 
 
@@ -32,7 +32,7 @@ export default class GameController {
             update.color==='yellow'||
             update.color==='magenta')) 
             {   
-                return 'Invalid Color!'
+                throw new BadRequestError('Invalid Color!')
             }
         if(update.board){
             const boardStringing = JSON.stringify(update.board)
@@ -50,7 +50,7 @@ export default class GameController {
                 .reduce((a, b) => a.concat(b))
                 .length
             if(moves>1) {
-                return 'Invalid Move!'
+                throw new BadRequestError('Invalid Move!')
             } 
         }
         return Game.merge(game, update).save()
