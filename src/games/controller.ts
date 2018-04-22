@@ -1,5 +1,5 @@
 import { JsonController, Get,Put,Body, Param,Post,HttpCode } from 'routing-controllers'
-import gamesById, { Game } from './data'
+import Game from './entity'
 type GameList = { games: Game[] }
 
 
@@ -7,16 +7,17 @@ type GameList = { games: Game[] }
 export default class GameController {
 
     @Get('/games')
-    allGames(): GameList {
-        return {games: []}
+    async allGames() {
+        const games = await Game.find()
+        return { games }
     }
 
     @Get('/games/:id')
-    getGame(
+        getGame(
         @Param('id') id: number
-    ): Game {
-        return gamesById[id]
-    }
+        ) {
+        return Game.findOne(id)
+        }
 
     @Put('/games/:id')
     updatePage(
@@ -24,7 +25,7 @@ export default class GameController {
     @Body() body: Partial<Game>
     ): Game { 
         console.log(`Incoming PUT body param:`, body)
-    return gamesById[id]
+    return Game.findOne[id]
     }
 
     @Post('/games')
