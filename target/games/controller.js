@@ -33,9 +33,26 @@ let GameController = class GameController {
             update.color === 'magenta')) {
             return 'Invalid Color!';
         }
+        if (update.board) {
+            const moves = game.board
+                .map((row, y) => row.filter((cell, x) => update.board[y][x] !== cell))
+                .reduce((a, b) => a.concat(b))
+                .length;
+            if (moves > 1) {
+                return 'Invalid Move!';
+            }
+        }
         return entity_1.default.merge(game, update).save();
     }
     createGame(game) {
+        const colors = ['red', 'blue', 'yellow', 'green', 'magenta'];
+        const defaultBoard = [
+            ['o', 'o', 'o'],
+            ['o', 'o', 'o'],
+            ['o', 'o', 'o']
+        ];
+        game.color = colors[Math.floor(Math.random() * colors.length)];
+        game.board = defaultBoard;
         return game.save();
     }
 };

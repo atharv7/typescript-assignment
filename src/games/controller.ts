@@ -31,10 +31,19 @@ export default class GameController {
             update.color==='green'||
             update.color==='yellow'||
             update.color==='magenta')) 
-            {
+            {   
                 return 'Invalid Color!'
             }
-                return Game.merge(game, update).save()
+        if(update.board){
+            const moves =  game.board
+                .map((row, y) => row.filter((cell, x) => update.board[y][x] !== cell))
+                .reduce((a, b) => a.concat(b))
+                .length
+            if(moves>1) {
+                return 'Invalid Move!'
+            } 
+        }
+        return Game.merge(game, update).save()
 
     }
     
@@ -42,7 +51,15 @@ export default class GameController {
     @HttpCode(201)
     createGame(
     @Body() game: Game
-    ) {
+    ) { 
+        const colors = ['red','blue','yellow','green','magenta']
+        const defaultBoard = [
+            ['o', 'o', 'o'],
+            ['o', 'o', 'o'],
+            ['o', 'o', 'o']
+        ]
+        game.color = colors[Math.floor(Math.random()*colors.length)] 
+        game.board = defaultBoard       
         return game.save()
     }
 }
