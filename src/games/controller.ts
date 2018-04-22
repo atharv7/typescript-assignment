@@ -35,8 +35,18 @@ export default class GameController {
                 return 'Invalid Color!'
             }
         if(update.board){
+            const boardStringing = JSON.stringify(update.board)
+            let bsFilter = boardStringing.replace(/[\[\]']/g,'').replace(/"/g,'')
+            const bsArray = bsFilter.split(',')
+            const bsArrayRewrap = [
+                [bsArray[0],bsArray[1],bsArray[2]],
+                [bsArray[3],bsArray[4],bsArray[5]],
+                [bsArray[6],bsArray[7],bsArray[8]]
+            ]
+            update.board = bsArrayRewrap
+
             const moves =  game.board
-                .map((row, y) => row.filter((cell, x) => update.board[y][x] !== cell))
+                .map((row, y) => row.filter((cell, x) => bsArrayRewrap[y][x] !== cell))
                 .reduce((a, b) => a.concat(b))
                 .length
             if(moves>1) {
